@@ -44,7 +44,9 @@ Run cmake
 
 Install llvm/clang with
 
+```bash
   sudo make install
+```
 
 Build MCLinker
 
