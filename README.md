@@ -35,7 +35,11 @@ Create llvm build directory and switch to it
 Run cmake
 
 ```bash
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/llvm -DLLVM_TARGETS_TO_BUILD="ARM;X86" -DLLVM_ENABLE_PIC=ON ../llvm
+  cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/llvm \
+    -DLLVM_TARGETS_TO_BUILD="ARM;X86" \
+    -DLLVM_ENABLE_PIC=ON ../llvm
 ```
 
 Install llvm/clang with
