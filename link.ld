@@ -1,40 +1,108 @@
+MEMORY {
+	FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 1M,
+	RAM  (rwx) : ORIGIN = 0x20000000, LENGTH = 112k
+}
+
 ENTRY(Reset_Handler)
 
-SECTIONS {
-	. = 0x08000000;
+SECTIONS
+{
+	.text : {
+		KEEP(*(.isr_vector))
+		*(.text*)
+		KEEP(*(.init))
+		KEEP(*(.fini))
+		*crtbegin.o(.ctors)
+		*crtbegin?.o(.ctors)
+		*(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+		*(SORT(.ctors.*))
+		*(.ctors)
+ 		*crtbegin.o(.dtors)
+ 		*crtbegin?.o(.dtors)
+ 		*(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
+ 		*(SORT(.dtors.*))
+ 		*(.dtors)
+		*(.rodata*)
+		KEEP(*(.eh_frame*))
+	} > FLASH
 
-	.vectors : ALIGN(16) SUBALIGN(16) {
-		KEEP(*(.vectors))
-	}
+	.ARM.extab : {
+		*(.ARM.extab* .gnu.linkonce.armextab.*)
+	} > FLASH
 
-	.text : ALIGN(4) SUBALIGN(4) {
-		. = ALIGN(4);
-		*(.text)
-		*(.text.*)
-		. = ALIGN(4);
-		*(.rodata)
-		*(.rodata.*)
-		. = ALIGN(4);
-		_etext = .;
-	}
+	__exidx_start = .;
 
-	. = 0x20000000;
+	.ARM.exidx : {
+		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
+	} > FLASH
 
-	.data : AT( ADDR( .text ) + SIZEOF( .text ) ) {
-		_data = .;
-		*(.data)
-		*(.data.*)
+	__exidx_end = .;
+	__etext = .;
+		
+	.data : AT (__etext)
+	{
+		__data_start__ = .;
+		*(vtable)
+		*(.data*)
 		. = ALIGN(4);
-		_edata = .;
-	}
+		PROVIDE_HIDDEN (__preinit_array_start = .);
+		KEEP(*(.preinit_array))
+		PROVIDE_HIDDEN (__preinit_array_end = .);
 
-	.bss : {
-		_bstart = .;
-		*(.bss)
-		*(.bss.*)
-		*(.COMMON)
 		. = ALIGN(4);
-		_bend = .;
-		PROVIDE(_estack = _data + 128k);
-	}
+		/* init data */
+		PROVIDE_HIDDEN (__init_array_start = .);
+		KEEP(*(SORT(.init_array.*)))
+		KEEP(*(.init_array))
+		PROVIDE_HIDDEN (__init_array_end = .);
+
+
+		. = ALIGN(4);
+		/* finit data */
+		PROVIDE_HIDDEN (__fini_array_start = .);
+		KEEP(*(SORT(.fini_array.*)))
+		KEEP(*(.fini_array))
+		PROVIDE_HIDDEN (__fini_array_end = .);
+
+		KEEP(*(.jcr*))
+		. = ALIGN(4);
+		/* All data end */
+		__data_end__ = .;
+
+	} > RAM
+
+	.bss :
+	{
+		. = ALIGN(4);
+		__bss_start__ = .;
+		*(.bss*)
+		*(COMMON)
+		. = ALIGN(4);
+		__bss_end__ = .;
+	} > RAM
+	
+	.heap (COPY):
+	{
+		__end__ = .;
+		end = __end__;
+		*(.heap*)
+		__HeapLimit = .;
+	} > RAM
+
+	/* .stack_dummy section doesn't contains any symbols. It is only
+	 * used for linker to calculate size of stack sections, and assign
+	 * values to stack symbols later */
+	.stack_dummy (COPY):
+	{
+		*(.stack*)
+	} > RAM
+
+	/* Set stack top to end of RAM, and stack limit move down by
+	 * size of stack_dummy section */
+	__StackTop = ORIGIN(RAM) + LENGTH(RAM);
+	__StackLimit = __StackTop - SIZEOF(.stack_dummy);
+	PROVIDE(__stack = __StackTop);
+	
+	/* Check if data + heap + stack exceeds RAM limit */
+	ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")
 }

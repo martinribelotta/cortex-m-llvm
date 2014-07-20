@@ -1,15 +1,15 @@
-extern unsigned int _etext, _data, _edata, _bstart, _bend, _estack;
+extern unsigned int __etext, __data_start__, __data_end__, __bss_start__, __bss_end__, __stack;
 
 extern int main(void);
 
 void DefaultReset_Handler(void) {
-  unsigned int *src = &_etext;
-  unsigned int *dst = &_data;
+  unsigned int *src = &__etext;
+  unsigned int *dst = &__data_start__;
   /* ROM has data at end of text; copy it.  */
-  while (dst < &_edata)
+  while (dst < &__data_end__)
     *dst++ = *src++;
   /* Zero bss.  */
-  for (dst = &_bstart; dst< &_bend; dst++)
+  for (dst = &__bss_start__; dst< &__bss_end__; dst++)
     *dst = 0;
   main();
   while(1)
@@ -33,7 +33,7 @@ void PendSV_Handler(void) __attribute ((weak, alias ("Default_Handler")));
 void SysTick_Handler(void) __attribute ((weak, alias ("Default_Handler")));
 
 __attribute__((section(".vectors"))) void *vectors[] = {
-  (void*) &_estack,
+  (void*) &__stack,
   Reset_Handler,             /* Reset Handler */
   NMI_Handler,               /* NMI Handler */
   HardFault_Handler,         /* Hard Fault Handler */

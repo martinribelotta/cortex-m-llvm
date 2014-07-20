@@ -3,7 +3,8 @@ SRC=main.c start.c
 LDSCRIPT=link.ld
 
 CC=clang
-LD=ld.mcld
+#LD=ld.mcld
+LD=arm-none-eabi-ld
 SIZE=llvm-size
 
 CFLAGS=-c
@@ -11,9 +12,13 @@ CFLAGS+=--target=armv7m-none-eabi
 CFLAGS+=-mcpu=cortex-m3
 CFLAGS+=-mthumb
 CFLAGS+=-integrated-as
+CFLAGS+=-Os
+CFLAGS+=-fno-builtin
+CFLAGS+=-g3
 
-LDFLAGS+=-march=arm
-LDFLAGS+=-T=$(LDSCRIPT)
+#LDFLAGS+=-march=arm
+#LDFLAGS+=-T=$(LDSCRIPT)
+LDFLAGS+=-T$(LDSCRIPT)
 #LDFLAGS+=-t
 
 OBJ=$(SRC:.c=.o)
