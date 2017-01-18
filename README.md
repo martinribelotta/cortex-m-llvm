@@ -5,7 +5,12 @@ Cortex M3/M4 with LLVM toolkit
 
 Example firmware for cortex-M3/M4 using LLVM / C 
 
-Build tools
+Use LLVM/CLANG from 4.0 release:
+
+ - For linux, you need to compile the source until version 4.0 is release [using this instructions](http://clang.llvm.org/get_started.html)
+ - For win32 using this [bledding edge build](https://sourceforge.net/projects/clangonwin/) or build it using [this tool](http://clangbuilder.net/)
+
+Build tools (deprecated)
 ===========
 
 Require git, gcc (build-essentials), cmake and autotools
