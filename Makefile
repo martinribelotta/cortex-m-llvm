@@ -4,8 +4,9 @@ LDSCRIPT=link.ld
 
 CC=clang
 #LD=ld.mcld
-LD=arm-none-eabi-ld
-SIZE=llvm-size
+#LD=arm-none-eabi-ld
+LD=ld.lld
+#SIZE=llvm-size
 
 CFLAGS=-c
 CFLAGS+=--target=armv7m-none-eabi
@@ -18,8 +19,9 @@ CFLAGS+=-g3
 
 #LDFLAGS+=-march=arm
 #LDFLAGS+=-T=$(LDSCRIPT)
-LDFLAGS+=-T$(LDSCRIPT)
+#LDFLAGS+=-T$(LDSCRIPT)
 #LDFLAGS+=-t
+LDFLAGS+=--script $(LDSCRIPT)
 
 OBJ=$(SRC:.c=.o)
 
@@ -27,12 +29,12 @@ all: $(TARGET)
 
 %.o: %.c
 	@echo " CC $^"
-	@$(CC) -o $@ $(CFLAGS) $^
+	$(CC) -o $@ $(CFLAGS) $^
 
 $(TARGET): $(OBJ)
 	@echo " LD $@"
-	@$(LD) -o $@ $(LDFLAGS) $^
-	@$(SIZE) $(TARGET)
+	$(LD) -o $@ $(LDFLAGS) $^
+	#@$(SIZE) $(TARGET)
 
 .PHONY: all clean list
 
