@@ -32,7 +32,7 @@ void DebugMon_Handler(void) __attribute ((weak, alias ("Default_Handler")));
 void PendSV_Handler(void) __attribute ((weak, alias ("Default_Handler")));
 void SysTick_Handler(void) __attribute ((weak, alias ("Default_Handler")));
 
-__attribute__((section(".vectors"))) void *vectors[] = {
+__attribute__((section(".isr_vector"))) void *vectors[] = {
   (void*) &__stack,
   Reset_Handler,             /* Reset Handler */
   NMI_Handler,               /* NMI Handler */
