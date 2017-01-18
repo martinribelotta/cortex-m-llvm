@@ -1,12 +1,19 @@
+/* ld.lld not implement memory at 4.0 release
 MEMORY {
 	FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 1M,
 	RAM  (rwx) : ORIGIN = 0x20000000, LENGTH = 112k
 }
+*/
+FLASH_ORIGIN = 0x08000000;
+FLASH_LENGTH = 1M;
+RAM_ORIGIN = 0x20000000;
+RAM_LENGTH = 112k;
 
 ENTRY(Reset_Handler)
 
 SECTIONS
 {
+	. = FLASH_ORIGIN;
 	.text : {
 		KEEP(*(.isr_vector))
 		*(.text*)
@@ -24,21 +31,23 @@ SECTIONS
  		*(.dtors)
 		*(.rodata*)
 		KEEP(*(.eh_frame*))
-	} > FLASH
+	}
 
 	.ARM.extab : {
 		*(.ARM.extab* .gnu.linkonce.armextab.*)
-	} > FLASH
+	}
 
 	__exidx_start = .;
 
 	.ARM.exidx : {
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
-	} > FLASH
+	}
 
 	__exidx_end = .;
 	__etext = .;
-		
+
+	. = RAM_ORIGIN;
+
 	.data : AT (__etext)
 	{
 		__data_start__ = .;
@@ -69,7 +78,7 @@ SECTIONS
 		/* All data end */
 		__data_end__ = .;
 
-	} > RAM
+	}
 
 	.bss :
 	{
@@ -79,27 +88,27 @@ SECTIONS
 		*(COMMON)
 		. = ALIGN(4);
 		__bss_end__ = .;
-	} > RAM
+	}
 	
-	.heap (COPY):
+	.heap :
 	{
 		__end__ = .;
 		end = __end__;
 		*(.heap*)
 		__HeapLimit = .;
-	} > RAM
+	}
 
 	/* .stack_dummy section doesn't contains any symbols. It is only
 	 * used for linker to calculate size of stack sections, and assign
 	 * values to stack symbols later */
-	.stack_dummy (COPY):
+	.stack_dummy :
 	{
 		*(.stack*)
-	} > RAM
+	}
 
 	/* Set stack top to end of RAM, and stack limit move down by
 	 * size of stack_dummy section */
-	__StackTop = ORIGIN(RAM) + LENGTH(RAM);
+	__StackTop = RAM_ORIGIN + RAM_LENGTH;
 	__StackLimit = __StackTop - SIZEOF(.stack_dummy);
 	PROVIDE(__stack = __StackTop);
 	
