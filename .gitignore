@@ -12,3 +12,6 @@
 *.la
 *.a
 *.elf
+*.bin
+*.lst
+*.rd
