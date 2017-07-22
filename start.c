@@ -2,16 +2,23 @@ extern unsigned int __etext, __data_start__, __data_end__, __bss_start__, __bss_
 
 extern int main(void);
 
+void DefaultReset_Handler(void);
+void Default_Handler(void);
+
 void DefaultReset_Handler(void) {
   unsigned int *src = &__etext;
   unsigned int *dst = &__data_start__;
+
   /* ROM has data at end of text; copy it.  */
   while (dst < &__data_end__)
     *dst++ = *src++;
+
   /* Zero bss.  */
   for (dst = &__bss_start__; dst < &__bss_end__; dst++)
     *dst = 0;
+
   main();
+
   while (1)
     ;
 }
