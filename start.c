@@ -34,19 +34,19 @@ void SysTick_Handler(void) __attribute((weak, alias("Default_Handler")));
 
 __attribute__((section(".isr_vector"))) void *vectors[] = {
     (void *)&__stack,
-    Reset_Handler,      /* Reset Handler */
-    NMI_Handler,        /* NMI Handler */
-    HardFault_Handler,  /* Hard Fault Handler */
-    MemManage_Handler,  /* MPU Fault Handler */
-    BusFault_Handler,   /* Bus Fault Handler */
-    UsageFault_Handler, /* Usage Fault Handler */
-    0,                  /* Reserved */
-    0,                  /* Reserved */
-    0,                  /* Reserved */
-    0,                  /* Reserved */
-    SVCall_Handler,     /* SVCall Handler */
-    DebugMon_Handler,   /* Debug Monitor Handler */
-    0,                  /* Reserved */
-    PendSV_Handler,     /* PendSV Handler */
-    SysTick_Handler,    /* SysTick Handler */
+    (void *)&Reset_Handler,      /* Reset Handler */
+    (void *)&NMI_Handler,        /* NMI Handler */
+    (void *)&HardFault_Handler,  /* Hard Fault Handler */
+    (void *)&MemManage_Handler,  /* MPU Fault Handler */
+    (void *)&BusFault_Handler,   /* Bus Fault Handler */
+    (void *)&UsageFault_Handler, /* Usage Fault Handler */
+    0,                           /* Reserved */
+    0,                           /* Reserved */
+    0,                           /* Reserved */
+    0,                           /* Reserved */
+    (void *)&SVCall_Handler,     /* SVCall Handler */
+    (void *)&DebugMon_Handler,   /* Debug Monitor Handler */
+    0,                           /* Reserved */
+    (void *)&PendSV_Handler,     /* PendSV Handler */
+    (void *)&SysTick_Handler,    /* SysTick Handler */
 };
