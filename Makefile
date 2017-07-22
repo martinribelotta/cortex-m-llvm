@@ -1,4 +1,4 @@
-TARGET=ex1.elf
+PRJ=llvm-cortex-m7
 SRC=main.c start.c
 LDSCRIPT=link.ld
 
@@ -17,38 +17,35 @@ CFLAGS+=-mcpu=cortex-m7
 CFLAGS+=-mfloat-abi=hard
 CFLAGS+=-mfpu=fpv5-sp-d16
 CFLAGS+=-ffreestanding
-# CFLAGS+=-fno-builtin
-# CFLAGS+=-nostdlib
-# CFLAGS+=-integrated-as
 CFLAGS+=-Og
 CFLAGS+=-g3
 CFLAGS+=-ggdb
 CFLAGS+=-std=c11
-# CFLAGS+=-Weverything
+CFLAGS+=-Weverything
 
 LDFLAGS+=--script $(LDSCRIPT)
 
 OBJ=$(SRC:.c=.o)
 
-all: $(TARGET)
+all: $(PRJ).elf
 
 %.o: %.c
 	@echo " CC $^"
 	@$(CC) -o $@ $(CFLAGS) $^
 
-$(TARGET): $(OBJ)
+$(PRJ).elf: $(OBJ)
 	@echo " LD $@"
 	@$(LD) -o $@ $(LDFLAGS) $^
-	@echo " READ -> $(TARGET).rd"
-	@$(READ) -Wall $(TARGET) > $(TARGET).rd
-	@echo " LIST -> $(TARGET).lst"
-	@$(DUMP) -axdDSstr $(TARGET) > $(TARGET).lst
-	@echo " COPY -> $(TARGET).bin"
-	@$(COPY) -O binary $(TARGET) $(TARGET).bin
-	@$(SIZE) $(TARGET)
+	@echo " READ -> $(PRJ).rd"
+	@$(READ) -Wall $(PRJ).elf > $(PRJ).rd
+	@echo " LIST -> $(PRJ).lst"
+	@$(DUMP) -axdDSstr $(PRJ).elf > $(PRJ).lst
+	@echo " COPY -> $(PRJ).bin"
+	@$(COPY) -O binary $(PRJ).elf $(PRJ).bin
+	@$(SIZE) $(PRJ).elf
 
 .PHONY: all clean list
 
 clean:
 	@echo " CLEAN"
-	@rm -fR $(OBJ) $(TARGET) $(TARGET).rd $(TARGET).lst $(TARGET).bin
+	@rm -fR $(OBJ) $(PRJ).elf $(PRJ).rd $(PRJ).lst $(PRJ).bin
