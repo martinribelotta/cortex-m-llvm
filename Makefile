@@ -23,6 +23,7 @@ CFLAGS+=-ggdb
 CFLAGS+=-std=c11
 CFLAGS+=-Weverything
 
+LDFLAGS=--Map $(PRJ).map
 LDFLAGS+=--script $(LDSCRIPT)
 
 OBJ=$(SRC:.c=.o)
@@ -48,4 +49,4 @@ $(PRJ).elf: $(OBJ)
 
 clean:
 	@echo " CLEAN"
-	@rm -fR $(OBJ) $(PRJ).elf $(PRJ).rd $(PRJ).lst $(PRJ).bin
+	@rm -fR $(OBJ) $(PRJ).elf $(PRJ).map $(PRJ).rd $(PRJ).lst $(PRJ).bin

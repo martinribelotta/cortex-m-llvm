@@ -1,3 +1,4 @@
+extern int i;
 int main(void);
 
 int i = 10;

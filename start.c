@@ -2,10 +2,10 @@ extern unsigned int __etext, __data_start__, __data_end__, __bss_start__, __bss_
 
 extern int main(void);
 
-void DefaultReset_Handler(void);
+void Default_Reset_Handler(void);
 void Default_Handler(void);
 
-void DefaultReset_Handler(void) {
+_Noreturn void Default_Reset_Handler(void) {
   unsigned int *src = &__etext;
   unsigned int *dst = &__data_start__;
 
@@ -23,12 +23,12 @@ void DefaultReset_Handler(void) {
     ;
 }
 
-void Default_Handler(void) {
+_Noreturn void Default_Handler(void) {
   while (1)
     ;
 }
 
-void Reset_Handler(void) __attribute((weak, alias("DefaultReset_Handler")));
+void Reset_Handler(void) __attribute((weak, alias("Default_Reset_Handler")));
 void NMI_Handler(void) __attribute((weak, alias("Default_Handler")));
 void HardFault_Handler(void) __attribute((weak, alias("Default_Handler")));
 void MemManage_Handler(void) __attribute((weak, alias("Default_Handler")));
@@ -39,7 +39,7 @@ void DebugMon_Handler(void) __attribute((weak, alias("Default_Handler")));
 void PendSV_Handler(void) __attribute((weak, alias("Default_Handler")));
 void SysTick_Handler(void) __attribute((weak, alias("Default_Handler")));
 
-__attribute__((section(".isr_vector"))) void *vectors[] = {
+__attribute__((section(".isr_vector"),used)) static void *vectors[] = {
     (void *)&__stack,
     (void *)&Reset_Handler,      /* Reset Handler */
     (void *)&NMI_Handler,        /* NMI Handler */
