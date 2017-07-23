@@ -23,7 +23,10 @@ CFLAGS+=-ggdb
 CFLAGS+=-std=c11
 CFLAGS+=-Weverything
 
-LDFLAGS=--Map $(PRJ).map
+LDFLAGS=--Bstatic
+LDFLAGS+=--build-id
+LDFLAGS+=--gc-sections
+LDFLAGS+=--Map $(PRJ).map
 LDFLAGS+=--script $(LDSCRIPT)
 
 OBJ=$(SRC:.c=.o)
