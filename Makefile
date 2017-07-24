@@ -1,49 +1,55 @@
-TARGET=ex1.elf
+PRJ=llvm-cortex-m7
 SRC=main.c start.c
 LDSCRIPT=link.ld
 
 CC=clang
-#LD=ld.mcld
-#LD=arm-none-eabi-ld
 LD=ld.lld
-#SIZE=llvm-size
+SIZE=llvm-size
+COPY=arm-none-eabi-objcopy
+READ=arm-none-eabi-readelf
+DUMP=arm-none-eabi-objdump
 
 CFLAGS=-c
-CFLAGS+=--target=armv7m-none-eabi
-CFLAGS+=-mcpu=cortex-m3
+CFLAGS+=--target=thumbv7em-unknown-none-eabi
 CFLAGS+=-mthumb
-CFLAGS+=-integrated-as
-CFLAGS+=-Os
-CFLAGS+=-fno-builtin
+CFLAGS+=-march=armv7e-m
+CFLAGS+=-mcpu=cortex-m7
+CFLAGS+=-mfloat-abi=hard
+CFLAGS+=-mfpu=fpv5-sp-d16
+CFLAGS+=-ffreestanding
+CFLAGS+=-Og
 CFLAGS+=-g3
+CFLAGS+=-ggdb
+CFLAGS+=-std=c11
+CFLAGS+=-Weverything
 
-#LDFLAGS+=-march=arm
-#LDFLAGS+=-T=$(LDSCRIPT)
-#LDFLAGS+=-T$(LDSCRIPT)
-#LDFLAGS+=-t
+LDFLAGS=--Bstatic
+LDFLAGS+=--build-id
+LDFLAGS+=--gc-sections
+LDFLAGS+=--Map $(PRJ).map
 LDFLAGS+=--script $(LDSCRIPT)
 
 OBJ=$(SRC:.c=.o)
 
-all: $(TARGET)
+all: $(PRJ).elf
 
 %.o: %.c
 	@echo " CC $^"
-	$(CC) -o $@ $(CFLAGS) $^
+	@$(CC) -o $@ $(CFLAGS) $^
 
-$(TARGET): $(OBJ)
+$(PRJ).elf: $(OBJ)
 	@echo " LD $@"
-	$(LD) -o $@ $(LDFLAGS) $^
-	#@$(SIZE) $(TARGET)
+	@$(LD) -o $@ $(LDFLAGS) $^
+	@echo " READ -> $(PRJ).rd"
+	@$(READ) -Wall $(PRJ).elf > $(PRJ).rd
+	@echo " LIST -> $(PRJ).lst"
+	@$(DUMP) -axdDSstr $(PRJ).elf > $(PRJ).lst
+	@echo " COPY -> $(PRJ).bin"
+	@$(COPY) -O binary $(PRJ).elf $(PRJ).bin
+	@$(SIZE) $(PRJ).elf
 
 .PHONY: all clean list
 
 clean:
 	@echo " CLEAN"
-	@rm -fR $(OBJ) $(TARGET) $(TARGET).rd $(TARGET).lst
-
-list:
-	@echo " READ -> $(TARGET).rd"
-	@arm-none-eabi-readelf -Wall $(TARGET) > $(TARGET).rd
-	@echo " LIST -> $(TARGET).lst"
-	@arm-none-eabi-objdump -axdDSstr $(TARGET) > $(TARGET).lst
+	@rm -fR $(OBJ) $(PRJ).elf $(PRJ).map $(PRJ).rd $(PRJ).lst $(PRJ).bin
