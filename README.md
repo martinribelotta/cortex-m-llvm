@@ -1,15 +1,14 @@
 cortex-m-llvm
 =============
 
+Cortex M3/M4 with LLVM toolkit.
 
-Cortex M3/M4 with LLVM toolkit
+Example firmware for cortex-M3/M4 using LLVM toolchain.
 
-Example firmware for cortex-M3/M4 using LLVM / C 
+Use LLVM/CLANG/LLD from svn trunk branch:
 
-Use LLVM/CLANG from 4.0 release:
-
- - For linux, you need to compile the source until version 4.0 is release [using this instructions](http://clang.llvm.org/get_started.html)
- - For win32 using this [bledding edge build](https://sourceforge.net/projects/clangonwin/) or build it using [this tool](http://clangbuilder.net/)
+ - For linux, you need to compile the source [using this instructions](http://clang.llvm.org/get_started.html)
+ - (Not test!) For win32 using this [bledding edge build](https://sourceforge.net/projects/clangonwin/) or build it using [this tool](http://clangbuilder.net/)
 
 Build tools (deprecated)
 ===========
@@ -43,12 +42,12 @@ Run cmake
 ```bash
   cmake \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/opt/llvm \
+    -DCMAKE_INSTALL_PREFIX=/opt/llvm-svn \
     -DLLVM_TARGETS_TO_BUILD="ARM;X86" \
     -DLLVM_ENABLE_PIC=ON ../llvm
 ```
 
-Install llvm/clang with
+Install llvm/clang/lld with
 
 ```bash
   sudo make install
