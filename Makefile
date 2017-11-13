@@ -1,4 +1,5 @@
 LLVM_SVN = /opt/llvm-svn/bin/
+GCC_ARM = /data/download/gcc-arm-none-eabi-6-2017-q2-update/bin/arm-none-eabi-
 
 PRJ = llvm-cortex-m7
 SRC = main.c start.c
@@ -7,12 +8,12 @@ LDSCRIPT = link.ld
 CC = $(LLVM_SVN)clang
 LD = $(LLVM_SVN)ld.lld
 SIZE = $(LLVM_SVN)llvm-size
-COPY = $(LLVM_SVN)llvm-objcopy
-READ = $(LLVM_SVN)llvm-readobj
+COPY = $(GCC_ARM)objcopy
+# LLVM PR35281
+#COPY = $(LLVM_SVN)llvm-objcopy
 DUMP = $(LLVM_SVN)llvm-objdump
 
-CFLAGS = -c
-CFLAGS += --target=thumbv7em-unknown-none-eabi
+CFLAGS = --target=thumbv7em-unknown-none-eabi
 CFLAGS += -mthumb
 CFLAGS += -march=armv7e-m
 CFLAGS += -mcpu=cortex-m7
@@ -35,21 +36,19 @@ all: $(PRJ).elf
 
 %.o: %.c
 	@echo " CC $^"
-	@$(CC) -o $@ $(CFLAGS) $^
+	$(CC) -o $@ $(CFLAGS) -c $^
 
 $(PRJ).elf: $(OBJ)
 	@echo " LD $@"
-	@$(LD) -o $@ $(LDFLAGS) $^
-	@echo " READ -> $(PRJ).rd"
-	@$(READ) -Wall $(PRJ).elf > $(PRJ).rd
+	$(LD) -o $@ $(LDFLAGS) $^
 	@echo " LIST -> $(PRJ).lst"
-	@$(DUMP) -axdDSstr $(PRJ).elf > $(PRJ).lst
+	$(DUMP) -D $(PRJ).elf > $(PRJ).lst
 	@echo " COPY -> $(PRJ).bin"
-	@$(COPY) -O binary $(PRJ).elf $(PRJ).bin
-	@$(SIZE) $(PRJ).elf
+	$(COPY) -O binary $(PRJ).elf $(PRJ).bin
+	$(SIZE) $(PRJ).elf
 
 .PHONY: all clean list
 
 clean:
 	@echo " CLEAN"
-	@rm -fR $(OBJ) $(PRJ).elf $(PRJ).map $(PRJ).rd $(PRJ).lst $(PRJ).bin
+	@rm -fR $(OBJ) $(PRJ).elf $(PRJ).map $(PRJ).lst $(PRJ).bin
