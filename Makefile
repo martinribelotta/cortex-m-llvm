@@ -1,5 +1,4 @@
 LLVM_SVN = /data/project/llvm/build/bin/
-GCC_ARM = /data/download/gcc-arm-none-eabi-6-2017-q2-update/bin/arm-none-eabi-
 
 PRJ = llvm-cortex-m7
 SRC = main.c start.c
@@ -8,7 +7,6 @@ LDSCRIPT = link.ld
 CC = $(LLVM_SVN)clang
 LD = $(LLVM_SVN)ld.lld
 SIZE = $(LLVM_SVN)llvm-size
-#COPY = $(GCC_ARM)objcopy
 # LLVM PR35281
 COPY = $(LLVM_SVN)llvm-objcopy
 DUMP = $(LLVM_SVN)llvm-objdump
