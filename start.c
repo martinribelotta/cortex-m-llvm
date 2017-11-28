@@ -1,6 +1,6 @@
 extern unsigned int __etext, __data_start__, __data_end__, __bss_start__, __bss_end__, __stack;
 
-extern int main(void);
+extern int main();
 
 void Default_Reset_Handler(void);
 void Default_Handler(void);
