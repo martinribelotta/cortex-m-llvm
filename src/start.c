@@ -20,7 +20,7 @@ _Noreturn void Default_Reset_Handler(void) {
   main();
 
   while (1)
-    ;
+    __asm__ volatile ("WFI");
 }
 
 _Noreturn void Default_Handler(void) {

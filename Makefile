@@ -1,52 +1,66 @@
-LLVM_SVN = /data/project/llvm/build/bin/
+include config.mk
+include scripts/$(ARCH).mk
 
-PRJ = llvm-cortex-m7
-SRC = main.c start.c
-LDSCRIPT = link.ld
+OUT := out
+CSRC:= $(wildcard src/*.c)
+OBJ := $(addprefix $(OUT)/, $(CSRC:.c=.o))
 
-CC = $(LLVM_SVN)clang
-LD = $(LLVM_SVN)ld.lld
-SIZE = $(LLVM_SVN)llvm-size
+CC = $(PREFIX)clang
+LD = $(PREFIX)ld.lld
+SIZE = $(PREFIX)llvm-size
 # LLVM PR35281
-COPY = $(LLVM_SVN)llvm-objcopy
-DUMP = $(LLVM_SVN)llvm-objdump
+COPY = $(PREFIX)llvm-objcopy
+DUMP = $(PREFIX)llvm-objdump
 
-CFLAGS = --target=thumbv7em-unknown-none-eabi
-CFLAGS += -mthumb
-CFLAGS += -march=armv7e-m
-CFLAGS += -mcpu=cortex-m7
-CFLAGS += -mfloat-abi=hard
-CFLAGS += -mfpu=fpv5-sp-d16
+TARGET:=$(OUT)/$(PRJ).elf
+TARGET_LST:=$(OUT)/$(PRJ).lst
+TARGET_BIN:=$(OUT)/$(PRJ).bin
+TARGET_MAP:=$(OUT)/$(PRJ).map
+
+CFLAGS := $(ARCH_FLAGS)
 CFLAGS += -ffreestanding
-CFLAGS += -O3
-CFLAGS += -std=c11
+CFLAGS += -O$(OPT_LEVEL)
+CFLAGS += -std=$(C_STD)
 CFLAGS += -Wall
+CFLAGS += -g$(DBG_LEVEL)
 
-LDFLAGS = --Bstatic
+LDFLAGS := --Bstatic
 LDFLAGS += --build-id
 LDFLAGS += --gc-sections
-LDFLAGS += --Map $(PRJ).map
+LDFLAGS += --Map $(TARGET_MAP)
 LDFLAGS += --script $(LDSCRIPT)
+LDFLAGS += -Llib
 
-OBJ = $(SRC:.c=.o)
+ifeq ($(VERBOSE),y)
+Q:=
+else
+Q:=@
+endif
 
-all: $(PRJ).elf
+all: $(TARGET_BIN) $(TARGET_LST) size
 
-%.o: %.c
-	@echo " CC $^"
-	$(CC) -o $@ $(CFLAGS) -c $^
+$(OUT)/%.o: %.c
+	@echo CC $^
+	@mkdir -p $(dir $@)
+	$(Q)$(CC) -o $@ $(CFLAGS) -c $<
 
-$(PRJ).elf: $(OBJ)
-	@echo " LD $@"
-	$(LD) -o $@ $(LDFLAGS) $^
-	@echo " LIST -> $(PRJ).lst"
-	$(DUMP) -D $(PRJ).elf > $(PRJ).lst
-	@echo " COPY -> $(PRJ).bin"
-	$(COPY) -O binary $(PRJ).elf $(PRJ).bin
-	$(SIZE) $(PRJ).elf
+$(TARGET): $(OBJ)
+	@echo LD $@
+	$(Q)$(LD) -o $@ $(LDFLAGS) $(OBJ)
 
-.PHONY: all clean list
+$(TARGET_LST): $(TARGET)
+	@echo LIST on $@
+	$(Q)$(DUMP) -D $< > $@
+
+$(TARGET_BIN): $(TARGET)
+	@echo COPY to $@
+	$(Q)$(COPY) -O binary $< $@
+
+size: $(TARGET)
+	$(Q)$(SIZE) $<
 
 clean:
-	@echo " CLEAN"
-	@rm -fR $(OBJ) $(PRJ).elf $(PRJ).map $(PRJ).lst $(PRJ).bin
+	@echo CLEAN
+	@rm -fR $(OUT)
+
+.PHONY: all clean list size
