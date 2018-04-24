@@ -3,7 +3,7 @@ PREFIX    ?=
 # y: verbose output, other: silent mode
 VERBOSE   ?= n
 # Project name
-PRJ       := llvm-cortex-m7
+PRJ       := llvm-project
 # Linker script in lib/*
 LDSCRIPT  := link.ld
 # Optimization level: 0, 1, 2, 3, fast, s, z, g
