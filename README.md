@@ -10,6 +10,19 @@ Use LLVM/CLANG/LLD from svn trunk branch:
  - For linux, you need to compile the source [using this instructions](http://clang.llvm.org/get_started.html)
  - (Not test!) For win32 using this [bledding edge build](https://sourceforge.net/projects/clangonwin/) or build it using [this tool](http://clangbuilder.net/)
 
+Usage
+=====
+
+This project provide a simple makefile set for working with LLVM/CLANG on cortex-m.
+Due to configure your target you need:
+
+ - Modify `config.mk` with preferred parameters for your project (self explained into file)
+ - Ensure memory configuration is correct for your MCU (on `lib/mem.ld`)
+ - Ensure linker script is correct (review `lib/link.ld`)
+ - Add vendor dependent reset vectors to `src/start.c`
+
+Next, add your sources to `src/*.c` or modify `Makefile` to include others directories
+
 Build tools (deprecated)
 ===========
 
