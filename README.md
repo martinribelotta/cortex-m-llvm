@@ -1,5 +1,4 @@
-cortex-m-llvm
-=============
+# cortex-m-llvm
 
 Cortex M3/M4 with LLVM toolkit.
 
@@ -10,8 +9,7 @@ Use LLVM/CLANG/LLD from svn trunk branch:
  - For linux, you need to compile the source [using this instructions](http://clang.llvm.org/get_started.html)
  - (Not test!) For win32 using this [bledding edge build](https://sourceforge.net/projects/clangonwin/) or build it using [this tool](http://clangbuilder.net/)
 
-Usage
-=====
+# Usage
 
 This project provide a simple makefile set for working with LLVM/CLANG on cortex-m.
 Due to configure your target you need:
@@ -23,8 +21,13 @@ Due to configure your target you need:
 
 Next, add your sources to `src/*.c` or modify `Makefile` to include others directories
 
-Build tools (deprecated)
-===========
+### Makefile targets
+  - **all**: Compile and link all files. Produce **elf**, **bin**, list and map
+  - **clean**: Remove compilation results
+  - **size**: Print size of result binary
+  - **list**: Create list file using objdump (llvm version)
+
+# Build tools (deprecated)
 
 Require git, gcc (build-essentials), cmake and autotools
 
