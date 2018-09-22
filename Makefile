@@ -63,4 +63,6 @@ clean:
 	@echo CLEAN
 	@rm -fR $(OUT)
 
-.PHONY: all clean list size
+rebuild: clean all
+
+.PHONY: all clean list size rebuild
