@@ -24,55 +24,8 @@ Next, add your sources to `src/*.c` or modify `Makefile` to include others direc
   - **size**: Print size of result binary
   - **list**: Create list file using objdump (llvm version)
 
-# Build tools (deprecated)
+# Required packages
 
-Require git, gcc (build-essentials), cmake and autotools
-
-Clone llvm-3.4/clang-3.4/mclinker:
-
-```bash
-  git clone http://llvm.org/git/llvm.git
-  cd llvm
-  git checkout release_34
-  cd tools
-  git clone http://llvm.org/git/clang.git
-  git checkout release_34
-  cd ../projects
-  git clone http://llvm.org/git/compiler-rt.git
-  cd ../
-  git clone https://code.google.com/p/mclinker/
-  git checkout release_26
-```
-
-Create llvm build directory and switch to it
-
-```bash
-  mkdir build && cd build
-```
-
-Run cmake
-
-```bash
-  cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/opt/llvm-svn \
-    -DLLVM_TARGETS_TO_BUILD="ARM;X86" \
-    -DLLVM_ENABLE_PIC=ON ../llvm
-```
-
-Install llvm/clang/lld with
-
-```bash
-  sudo make install
-```
-
-Build MCLinker
-
-```bash
-  cd ../mclinker
-  export PATH=$PATH:/opt/llvm/bin
-  ./configure --prefix=/opt/llvm
-  make && sudo make install
-```
-
-At now, try to build example with make
+  - clang 6.0 or higher
+  - llvm 6.0 or higher
+  - lld 6.0 or higher
