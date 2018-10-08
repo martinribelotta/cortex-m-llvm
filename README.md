@@ -1,8 +1,8 @@
 # cortex-m-llvm
 
-Cortex M3/M4 with LLVM toolkit.
+Cortex M with LLVM toolkit.
 
-Example firmware for cortex-M3/M4 using LLVM toolchain.
+Example firmware for cortex-m using LLVM toolchain.
 
 Tested well with LLVM/CLANG 6.0 or high from [LLVM download site](http://releases.llvm.org/download.html)
 
