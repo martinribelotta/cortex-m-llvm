@@ -50,7 +50,7 @@ $(TARGET): $(OBJ)
 
 $(TARGET_LST): $(TARGET)
 	@echo LIST on $@
-	$(Q)$(DUMP) -D $< > $@
+	$(Q)$(DUMP) -x -s -S $< > $@
 
 $(TARGET_BIN): $(TARGET)
 	@echo COPY to $@
