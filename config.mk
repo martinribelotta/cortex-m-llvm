@@ -14,3 +14,5 @@ ARCH      := cortex-m7
 C_STD     := c11
 # Debug level: 0, 1, 2, 3
 DBG_LEVEL := 3
+# Flow of build: bytecode, native
+BUILD_FLOW := bytecode

@@ -16,3 +16,5 @@
 *.lst
 *.rd
 *.map
+
+out/
