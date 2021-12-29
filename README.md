@@ -1,3 +1,5 @@
+**DEPRECATED** Use instread [LLVM embedded toolchain for Arm](https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm) from ARM-Software
+
 # cortex-m-llvm
 
 Cortex M with LLVM toolkit.
